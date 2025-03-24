@@ -15,7 +15,7 @@ import {
 import { WeatherData } from '@/utils/airQualityUtils';
 
 interface WeatherCardProps {
-  data: WeatherData;
+  data: WeatherData | null;
   isLoading?: boolean;
 }
 
@@ -48,6 +48,19 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data, isLoading = false }) =>
             <div className="h-10 bg-slate-200 dark:bg-slate-700 rounded-md w-1/4"></div>
             <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-md w-full"></div>
             <div className="h-20 bg-slate-200 dark:bg-slate-700 rounded-md w-full"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Add check for null data
+  if (!data) {
+    return (
+      <Card className="glass-card shadow-lg">
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center justify-center py-10">
+            <p className="text-lg font-medium text-muted-foreground">No weather data available</p>
           </div>
         </CardContent>
       </Card>

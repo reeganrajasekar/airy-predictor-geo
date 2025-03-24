@@ -9,7 +9,7 @@ import Hero from '@/components/Hero';
 import LoadingState from '@/components/LoadingState';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { RefreshCw, MapPin, AlertCircle } from 'lucide-react';
+import { RefreshCw, MapPin, AlertCircle, Wind } from 'lucide-react';
 import { 
   getCurrentPosition, 
   getLocationFromCoordinates, 

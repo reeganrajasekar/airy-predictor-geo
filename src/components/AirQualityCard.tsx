@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { AirQualityData, getAqiCategory, getAqiDescription } from '@/utils/airQualityUtils';
 
 interface AirQualityCardProps {
-  data: AirQualityData;
+  data: AirQualityData | null;
   isLoading?: boolean;
   onRefresh?: () => void;
 }
@@ -33,6 +33,19 @@ const AirQualityCard: React.FC<AirQualityCardProps> = ({
             <div className="h-12 bg-slate-200 dark:bg-slate-700 rounded-md w-3/4"></div>
             <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-md w-full"></div>
             <div className="h-28 bg-slate-200 dark:bg-slate-700 rounded-md w-full"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Add check for null data
+  if (!data) {
+    return (
+      <Card className="glass-card shadow-lg">
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center justify-center py-10">
+            <p className="text-lg font-medium text-muted-foreground">No air quality data available</p>
           </div>
         </CardContent>
       </Card>

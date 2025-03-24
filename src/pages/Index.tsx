@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import AirQualityCard from '@/components/AirQualityCard';
@@ -317,7 +316,7 @@ const Index = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
               <div className="lg:col-span-2 animate-fade-in-up delay-0">
                 <AirQualityCard 
-                  data={airQualityData!} 
+                  data={airQualityData} 
                   isLoading={isAirQualityLoading}
                   onRefresh={refreshAirQualityData}
                 />
@@ -325,7 +324,7 @@ const Index = () => {
               
               <div className="animate-fade-in-up delay-100">
                 <WeatherCard 
-                  data={weatherData!} 
+                  data={weatherData} 
                   isLoading={isWeatherLoading}
                 />
               </div>

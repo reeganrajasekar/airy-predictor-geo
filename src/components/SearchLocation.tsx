@@ -20,6 +20,7 @@ const SearchLocation: React.FC<SearchLocationProps> = ({ onLocationSelect }) => 
   const handleSearch = async () => {
     if (!query.trim()) {
       setResults([]);
+      setIsDropdownOpen(false);
       return;
     }
     
@@ -27,7 +28,7 @@ const SearchLocation: React.FC<SearchLocationProps> = ({ onLocationSelect }) => 
     try {
       const locations = await searchLocation(query);
       setResults(locations);
-      setIsDropdownOpen(true);
+      setIsDropdownOpen(locations.length > 0);
     } catch (error) {
       console.error('Error searching for location:', error);
     } finally {
@@ -37,6 +38,7 @@ const SearchLocation: React.FC<SearchLocationProps> = ({ onLocationSelect }) => 
   
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleSearch();
     }
   };
@@ -112,6 +114,7 @@ const SearchLocation: React.FC<SearchLocationProps> = ({ onLocationSelect }) => 
                 <button
                   className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-primary/5 transition-colors"
                   onClick={() => handleLocationClick(result.latitude, result.longitude, result.city, result.country)}
+                  type="button"
                 >
                   <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
                   <div>

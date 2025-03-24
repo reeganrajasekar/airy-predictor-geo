@@ -118,22 +118,31 @@ export const getPollutantDescription = (pollutantName: string): string => {
   }
 };
 
+// Helper function to get a deterministic random number based on a seed
+const getSeededRandom = (seed: number, min: number, max: number) => {
+  // Simple seeded random function
+  const seedRandom = ((seed * 9301 + 49297) % 233280) / 233280;
+  return min + seedRandom * (max - min);
+};
+
 /**
  * Generates mock air quality data for demo purposes
  */
 export const generateMockAirQualityData = (
   city: string = "Demo City",
-  country: string = "Demo Country"
+  country: string = "Demo Country",
+  seed: number = Math.floor(Math.random() * 100)
 ): AirQualityData => {
-  const aqi = Math.floor(Math.random() * 300);
+  // Use seed to generate consistent data for the same inputs
+  const aqi = Math.floor(getSeededRandom(seed, 0, 300));
   const category = getAqiCategory(aqi);
   
-  const pm25Value = Math.floor(Math.random() * 150);
-  const pm10Value = Math.floor(Math.random() * 200);
-  const o3Value = Math.floor(Math.random() * 150);
-  const no2Value = Math.floor(Math.random() * 200);
-  const so2Value = Math.floor(Math.random() * 100);
-  const coValue = Math.floor(Math.random() * 10000) / 100;
+  const pm25Value = Math.floor(getSeededRandom(seed + 1, 0, 150));
+  const pm10Value = Math.floor(getSeededRandom(seed + 2, 0, 200));
+  const o3Value = Math.floor(getSeededRandom(seed + 3, 0, 150));
+  const no2Value = Math.floor(getSeededRandom(seed + 4, 0, 200));
+  const so2Value = Math.floor(getSeededRandom(seed + 5, 0, 100));
+  const coValue = Math.floor(getSeededRandom(seed + 6, 0, 1000)) / 100;
   
   const pollutants: Pollutant[] = [
     {
@@ -211,23 +220,29 @@ export const generateMockAirQualityData = (
 /**
  * Generates mock weather data for demo purposes
  */
-export const generateMockWeatherData = (): WeatherData => {
+export const generateMockWeatherData = (seed: number = Math.floor(Math.random() * 100)): WeatherData => {
   const conditions = [
     { condition: "Clear", icon: "sun" },
     { condition: "Partly Cloudy", icon: "cloud-sun" },
     { condition: "Cloudy", icon: "cloud" },
     { condition: "Rain", icon: "cloud-rain" },
     { condition: "Thunderstorm", icon: "cloud-lightning" },
-    { condition: "Snow", icon: "cloud-snow" },
-    { condition: "Fog", icon: "cloud-fog" }
+    { condition: "Snow", icon: "cloud-snow" }
   ];
   
-  const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
+  // Use seed to determine the weather condition consistently
+  const conditionIndex = Math.floor(getSeededRandom(seed, 0, conditions.length));
+  const randomCondition = conditions[conditionIndex];
+  
+  // Generate consistent temperature, humidity and wind speed based on the seed
+  const temperature = Math.floor(getSeededRandom(seed + 10, 5, 40));
+  const humidity = Math.floor(getSeededRandom(seed + 20, 20, 80));
+  const windSpeed = Math.floor(getSeededRandom(seed + 30, 1, 30));
   
   return {
-    temperature: Math.floor(Math.random() * 35) + 5, // 5 to 40 celsius
-    humidity: Math.floor(Math.random() * 60) + 20, // 20% to 80%
-    windSpeed: Math.floor(Math.random() * 30) + 1, // 1 to 30 km/h
+    temperature,
+    humidity,
+    windSpeed,
     condition: randomCondition.condition,
     icon: randomCondition.icon
   };

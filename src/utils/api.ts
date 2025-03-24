@@ -15,8 +15,9 @@ export const fetchAirQualityData = async (
   await new Promise(resolve => setTimeout(resolve, 1500));
   
   // For demonstration purposes, we're generating mock data
-  // In a real app, this would call an actual API
-  return generateMockAirQualityData(city, country);
+  // based on the latitude and longitude to make it more consistent
+  const seed = Math.abs(Math.floor((latitude + longitude) * 10)) % 100;
+  return generateMockAirQualityData(city, country, seed);
 };
 
 /**
@@ -31,8 +32,9 @@ export const fetchWeatherData = async (
   await new Promise(resolve => setTimeout(resolve, 1000));
   
   // For demonstration purposes, we're generating mock data
-  // In a real app, this would call an actual API
-  return generateMockWeatherData();
+  // based on the latitude and longitude to make it more consistent
+  const seed = Math.abs(Math.floor((latitude + longitude) * 10)) % 100;
+  return generateMockWeatherData(seed);
 };
 
 /**
@@ -50,12 +52,15 @@ export const fetchAirQualityForecast = async (
   // Generate mock forecast data
   const forecast: AirQualityData[] = [];
   const today = new Date();
+  const baseSeed = Math.abs(Math.floor((latitude + longitude) * 10)) % 100;
   
   for (let i = 0; i < days; i++) {
     const forecastDate = new Date();
     forecastDate.setDate(today.getDate() + i);
     
-    const mockData = generateMockAirQualityData();
+    const dailySeed = (baseSeed + i) % 100; // Different seed for each day but consistent for same location
+    const mockData = generateMockAirQualityData("Forecast", "", dailySeed);
+    mockData.location.city = ""; // Clear location for forecast data
     mockData.time.local = forecastDate.toLocaleString();
     mockData.time.utc = forecastDate.toISOString();
     

@@ -342,31 +342,40 @@ const Index = () => {
                 <h2 className="text-2xl font-bold mb-6">Air Quality Forecast</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                  {forecastData.map((day, index) => (
-                    <Card 
-                      key={index} 
-                      className={`aqi-card shadow-md aqi-${day.category} animate-fade-in delay-${index * 100}`}
-                    >
-                      <CardContent className="p-4">
-                        <div className="text-center mb-2">
-                          <div className="font-medium">
-                            {new Date(day.time.utc).toLocaleDateString(undefined, { weekday: 'short' })}
+                  {forecastData.map((day, index) => {
+                    const forecastDate = new Date(day.time.utc);
+                    const isValidDate = !isNaN(forecastDate.getTime());
+                    
+                    return (
+                      <Card 
+                        key={index} 
+                        className={`aqi-card shadow-md aqi-${day.category} animate-fade-in delay-${index * 100}`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="text-center mb-2">
+                            <div className="font-medium">
+                              {isValidDate 
+                                ? forecastDate.toLocaleDateString(undefined, { weekday: 'short' }) 
+                                : `Day ${index + 1}`}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {isValidDate 
+                                ? forecastDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) 
+                                : ''}
+                            </div>
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            {new Date(day.time.utc).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                          
+                          <div className="flex flex-col items-center">
+                            <div className="text-3xl font-bold mb-1">{day.aqi}</div>
+                            <div className="px-2 py-1 rounded-full text-xs font-medium" 
+                              style={{ backgroundColor: `rgb(var(--aqi-${day.category}))`, color: 'white' }}>
+                              {day.category.charAt(0).toUpperCase() + day.category.slice(1)}
+                            </div>
                           </div>
-                        </div>
-                        
-                        <div className="flex flex-col items-center">
-                          <div className="text-3xl font-bold mb-1">{day.aqi}</div>
-                          <div className="px-2 py-1 rounded-full text-xs font-medium" 
-                            style={{ backgroundColor: `rgb(var(--aqi-${day.category}))`, color: 'white' }}>
-                            {day.category.charAt(0).toUpperCase() + day.category.slice(1)}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
             )}

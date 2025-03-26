@@ -1,3 +1,4 @@
+
 import { AirQualityData, WeatherData, generateMockAirQualityData } from './airQualityUtils';
 
 // OpenWeather API key (in a real application, this should be stored in environment variables)
@@ -132,12 +133,15 @@ export const fetchAirQualityForecast = async (
   const baseSeed = Math.abs(Math.floor((latitude + longitude) * 10)) % 100;
   
   for (let i = 0; i < days; i++) {
+    // Create a proper Date object for the forecast day
     const forecastDate = new Date();
     forecastDate.setDate(today.getDate() + i);
     
     const dailySeed = (baseSeed + i) % 100; // Different seed for each day but consistent for same location
     const mockData = generateMockAirQualityData("Forecast", "", dailySeed);
     mockData.location.city = ""; // Clear location for forecast data
+    
+    // Ensure we set valid date strings
     mockData.time.local = forecastDate.toLocaleString();
     mockData.time.utc = forecastDate.toISOString();
     

@@ -1,4 +1,3 @@
-
 // Air quality utility functions
 
 export interface Pollutant {
@@ -37,6 +36,9 @@ export interface WeatherData {
   windSpeed: number;
   condition: string;
   icon: string;
+  location?: {
+    name: string;
+  };
 }
 
 /**

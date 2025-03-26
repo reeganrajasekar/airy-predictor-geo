@@ -56,6 +56,17 @@ const SearchLocation: React.FC<SearchLocationProps> = ({ onLocationSelect }) => 
     inputRef.current?.focus();
   };
   
+  // Modified to also search on query change after delay
+  useEffect(() => {
+    const searchTimer = setTimeout(() => {
+      if (query.trim().length >= 2) {
+        handleSearch();
+      }
+    }, 500); // 500ms debounce
+    
+    return () => clearTimeout(searchTimer);
+  }, [query]);
+  
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

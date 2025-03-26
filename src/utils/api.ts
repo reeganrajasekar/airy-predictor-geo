@@ -141,9 +141,9 @@ export const searchLocation = async (
   query: string
 ): Promise<{ latitude: number; longitude: number; city: string; country: string }[]> => {
   // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise(resolve => setTimeout(resolve, 800));
   
-  // Mock locations for demonstration
+  // Mock locations database with more Indian cities
   const mockLocations = [
     { latitude: 40.7128, longitude: -74.0060, city: "New York", country: "United States" },
     { latitude: 51.5074, longitude: 0.1278, city: "London", country: "United Kingdom" },
@@ -155,6 +155,15 @@ export const searchLocation = async (
     { latitude: -33.8688, longitude: 151.2093, city: "Sydney", country: "Australia" },
     { latitude: 31.2304, longitude: 121.4737, city: "Shanghai", country: "China" },
     { latitude: -22.9068, longitude: -43.1729, city: "Rio de Janeiro", country: "Brazil" },
+    // Indian cities
+    { latitude: 13.0827, longitude: 80.2707, city: "Chennai", country: "India" },
+    { latitude: 28.6139, longitude: 77.2090, city: "Delhi", country: "India" },
+    { latitude: 19.0760, longitude: 72.8777, city: "Mumbai", country: "India" },
+    { latitude: 22.5726, longitude: 88.3639, city: "Kolkata", country: "India" },
+    { latitude: 17.3850, longitude: 78.4867, city: "Hyderabad", country: "India" },
+    { latitude: 12.9716, longitude: 77.5946, city: "Bangalore", country: "India" },
+    { latitude: 23.0225, longitude: 72.5714, city: "Ahmedabad", country: "India" },
+    { latitude: 26.9124, longitude: 75.7873, city: "Jaipur", country: "India" },
   ];
   
   if (!query.trim()) {

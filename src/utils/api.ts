@@ -1,8 +1,7 @@
-
 import { AirQualityData, WeatherData, generateMockAirQualityData } from './airQualityUtils';
 
-// Weather API key (in a real application, this should be stored in environment variables)
-const WEATHER_API_KEY = "YOUR_WEATHER_API_KEY"; // Replace with your actual API key
+// OpenWeather API key (in a real application, this should be stored in environment variables)
+const OPENWEATHER_API_KEY = "YOUR_OPENWEATHER_API_KEY"; // Replace with your actual API key
 
 /**
  * Fetches air quality data for the given coordinates
@@ -24,37 +23,37 @@ export const fetchAirQualityData = async (
 };
 
 /**
- * Fetches weather data for the given coordinates using Weather.com API
+ * Fetches weather data for the given coordinates using OpenWeather API
  */
 export const fetchWeatherData = async (
   latitude: number,
   longitude: number
 ): Promise<WeatherData> => {
   try {
-    // The Weather Company API endpoint (IBM Weather)
-    const apiUrl = `https://api.weather.com/v3/wx/observations/current?geocode=${latitude},${longitude}&units=m&language=en-US&format=json&apiKey=${WEATHER_API_KEY}`;
+    // OpenWeather API endpoint
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${OPENWEATHER_API_KEY}`;
     
     const response = await fetch(apiUrl);
     
     if (!response.ok) {
-      throw new Error(`Weather API error: ${response.status}`);
+      throw new Error(`OpenWeather API error: ${response.status}`);
     }
     
     const data = await response.json();
     
-    // Map the Weather.com API response to our WeatherData format
+    // Map the OpenWeather API response to our WeatherData format
     return {
-      temperature: data.temperature,
-      condition: data.wxPhraseLong || "Unknown",
-      icon: mapWeatherIconToApp(data.iconCode),
-      humidity: data.relativeHumidity,
-      windSpeed: data.windSpeed,
+      temperature: Math.round(data.main.temp),
+      condition: data.weather[0].description,
+      icon: mapOpenWeatherIconToApp(data.weather[0].icon),
+      humidity: data.main.humidity,
+      windSpeed: data.wind.speed,
       location: {
-        name: data.city || "Unknown"
+        name: data.name
       }
     };
   } catch (error) {
-    console.error("Error fetching weather data from Weather.com API:", error);
+    console.error("Error fetching weather data from OpenWeather API:", error);
     
     // Fallback to mock data if the API request fails
     const seed = Math.abs(Math.floor((latitude + longitude) * 10)) % 100;
@@ -63,23 +62,38 @@ export const fetchWeatherData = async (
 };
 
 /**
- * Maps Weather.com API icon codes to our application's icon names
+ * Maps OpenWeather API icon codes to our application's icon names
+ * OpenWeather icon codes reference: https://openweathermap.org/weather-conditions
  */
-const mapWeatherIconToApp = (iconCode: number): string => {
-  // Weather.com icon code mapping to our app's icons
-  // Reference: https://docs.google.com/document/d/1_Svb4RqF6F6V_R0U7e6bfecnKDhG2RJvZO8QZyJO0t4/edit#
-  if (iconCode <= 4) return 'sun'; // Clear, Sunny
-  if (iconCode <= 11) return 'cloud-sun'; // Partly Cloudy
-  if (iconCode <= 26) return 'cloud'; // Cloudy
-  if (iconCode <= 39) return 'cloud-rain'; // Rain
-  if (iconCode <= 42) return 'cloud-lightning'; // Thunderstorms
-  if (iconCode <= 56) return 'cloud-snow'; // Snow
-  return 'cloud'; // Default
+const mapOpenWeatherIconToApp = (iconCode: string): string => {
+  // First two characters determine the weather condition
+  const condition = iconCode.substring(0, 2);
+  
+  switch (condition) {
+    case '01': // Clear sky
+      return 'sun';
+    case '02': // Few clouds
+    case '03': // Scattered clouds
+      return 'cloud-sun';
+    case '04': // Broken clouds, overcast clouds
+      return 'cloud';
+    case '09': // Shower rain
+    case '10': // Rain
+      return 'cloud-rain';
+    case '11': // Thunderstorm
+      return 'cloud-lightning';
+    case '13': // Snow
+      return 'cloud-snow';
+    case '50': // Mist, fog
+      return 'cloud';
+    default:
+      return 'cloud';
+  }
 };
 
 /**
  * Helper function to generate mock weather data
- * This is used as a fallback if the Weather.com API request fails
+ * This is used as a fallback if the OpenWeather API request fails
  */
 export const generateMockWeatherData = (seed: number): WeatherData => {
   // Same implementation as before to ensure backwards compatibility

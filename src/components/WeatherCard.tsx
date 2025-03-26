@@ -77,6 +77,9 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data, isLoading = false }) =>
           <div>
             <div className="text-3xl font-bold">{data.temperature}°C</div>
             <div className="text-muted-foreground">{data.condition}</div>
+            {data.location?.name && (
+              <div className="text-sm text-muted-foreground">{data.location.name}</div>
+            )}
           </div>
         </div>
         
